@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<!-- ============================================================
+     Campus Stormwater Runoff & Microplastics Audit
+     A single-page website: HTML (structure) + CSS (style) + JS (logic)
+     ============================================================ -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <!-- This line makes the page scale correctly on phones -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Campus Stormwater Runoff & Microplastics Audit</title>
+
+  <style>
+    /* ==========================================================
+       1. CSS VARIABLES
+       Colours are stored once here and reused everywhere with var().
+       Change a value here and the whole site updates.
+       ========================================================== */
+    :root {
+      --deep-blue: #0b3c5d;   /* headings, header background */
+      --water-blue: #1d70a2;  /* buttons, links */
+      --light-blue: #e6f2fa;  /* page background */
+      --teal: #1aa6a6;        /* accent colour */
+      --slate: #3d4f5c;       /* body text */
+      --white: #ffffff;
+      --low: #2e9d6b;         /* result colours */
+      --moderate: #e0a21b;
+      --high: #d64545;
+    }
+
+    /* ==========================================================
+       2. GLOBAL / RESET STYLES
+       ========================================================== */
+    * { box-sizing: border-box; margin: 0; padding: 0; } /* padding no longer adds to width */
+
+    body {
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--light-blue);
+      color: var(--slate);
+      line-height: 1.6;
+    }
+
+    /* .container keeps content centred and not too wide on big screens */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+
+    section { padding: 50px 0; }
+
+    h2 { color: var(--deep-blue); text-align: center; margin-bottom: 10px; font-size: 1.9rem; }
+    .section-intro { text-align: center; max-width: 650px; margin: 0 auto 30px; }
+
+    /* ==========================================================
+       3. NAVIGATION BAR (logo + Login / Sign Up buttons)
+       Flexbox puts the items in one row; flex-wrap lets them
+       drop onto a second row on small screens.
+       ========================================================== */
+    .navbar { background: var(--deep-blue); padding: 12px 0; }
+    .navbar .container {
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 10px;
+    }
+    .logo { color: var(--white); font-weight: 700; font-size: 1.1rem; }
+    .nav-buttons { display: flex; gap: 10px; }
+
+    /* ==========================================================
+       4. BUTTONS
+       ========================================================== */
+    .btn {
+      border: 2px solid var(--teal); background: var(--teal); color: var(--white);
+      padding: 10px 20px; border-radius: 8px; font-size: 1rem; font-weight: 600;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .btn:hover { background: #148585; border-color: #148585; }
+    .btn-outline { background: transparent; }            /* the "Login" button style */
+    .btn-outline:hover { background: rgba(255, 255, 255, 0.15); }
+
+    /* ==========================================================
+       5. HERO SECTION (big title area with a blue gradient)
+       ========================================================== */
+    .hero {
+      background: linear-gradient(135deg, var(--deep-blue), var(--water-blue) 60%, var(--teal));
+      color: var(--white); text-align: center; padding: 80px 0;
+    }
+    .hero h1 { font-size: clamp(1.8rem, 5vw, 3rem); margin-bottom: 15px; } /* clamp = responsive font size */
+    .hero p { font-size: 1.15rem; max-width: 700px; margin: 0 auto; opacity: 0.95; }
+
+    /* ==========================================================
+       6. CARD STYLE (reused by the calculator and info cards)
+       ========================================================== */
+    .card {
+      background: var(--white); border-radius: 12px; padding: 25px;
+      box-shadow: 0 4px 12px rgba(11, 60, 93, 0.1);
+      border-top: 5px solid var(--teal);
+    }
+    .card h3 { color: var(--deep-blue); margin: 8px 0; }
+
+    /* ==========================================================
+       7. RISK CALCULATOR FORM + RESULT BOX
+       ========================================================== */
+    .calculator { max-width: 600px; margin: 0 auto; }
+    label { display: block; font-weight: 600; margin: 15px 0 5px; }
+    select, input {
+      width: 100%; padding: 10px; font-size: 1rem;
+      border: 2px solid #b8d4e3; border-radius: 8px;
+    }
+    .calculator .btn { margin-top: 20px; width: 100%; }
+
+    /* The result box is hidden until the button is clicked */
+    #result-box { display: none; margin-top: 20px; padding: 18px; border-radius: 8px; border-left: 8px solid; }
+    #result-box.low      { background: #e6f6ee; border-color: var(--low); }
+    #result-box.moderate { background: #fdf3dc; border-color: var(--moderate); }
+    #result-box.high     { background: #fbe5e5; border-color: var(--high); }
+    #risk-level { font-size: 1.4rem; font-weight: 700; }
+
+    /* ==========================================================
+       8. INFO CARD GRID
+       "auto-fit + minmax" = as many columns as fit, each at least
+       240px wide. Phones get 1 column, desktops get 4. No media
+       query needed.
+       ========================================================== */
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+    .icon { font-size: 2rem; }
+
+    /* ==========================================================
+       9. RECOMMENDATIONS LIST
+       ========================================================== */
+    .recommendations ul { max-width: 700px; margin: 0 auto; padding-left: 25px; }
+    .recommendations li { margin-bottom: 12px; }
+
+    /* ==========================================================
+       10. FOOTER
+       ========================================================== */
+    footer { background: var(--deep-blue); color: var(--white); text-align: center; padding: 20px; font-size: 0.9rem; }
+
+    /* ==========================================================
+       11. LOGIN / SIGN UP POP-UP (modal)
+       Hidden by default; JavaScript adds the class "open" to show it.
+       ========================================================== */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;          /* covers the whole screen */
+      background: rgba(0, 0, 0, 0.55); justify-content: center; align-items: center;
+      padding: 20px; z-index: 100;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal { background: var(--white); border-radius: 12px; padding: 30px; width: 100%; max-width: 400px; position: relative; }
+    .modal h2 { margin-bottom: 15px; }
+    .close-btn { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 1.6rem; cursor: pointer; }
+    #auth-message { margin-top: 12px; color: var(--low); font-weight: 600; text-align: center; }
+    .switch-link { text-align: center; margin-top: 12px; font-size: 0.9rem; }
+    .switch-link a { color: var(--water-blue); cursor: pointer; text-decoration: underline; }
+  </style>
+</head>
+
+<body>
+
+  <!-- ==========================================================
+       NAVIGATION BAR: site name and the Login / Sign Up buttons.
+       The onclick attributes call JavaScript functions (see bottom).
+       ========================================================== -->
+  <header class="navbar">
+    <div class="container">
+      <div class="logo">💧 Campus Water Audit</div>
+      <nav class="nav-buttons">
+        <button class="btn btn-outline" onclick="openModal('login')">Login</button>
+        <button class="btn" onclick="openModal('signup')">Sign Up</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- ========================================================
+         HERO SECTION: project title and subtitle
+         ======================================================== -->
+    <section class="hero">
+      <div class="container">
+        <h1>Campus Stormwater Runoff &amp; Microplastics Audit</h1>
+        <p>Tracing Rainwater Pathways, Plastic Litter, and Pollution Risks Across University Grounds</p>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         INTERACTIVE RISK CALCULATOR
+         The user picks a location and a debris type, clicks the
+         button, and JavaScript fills in the result box.
+         ======================================================== -->
+    <section id="calculator">
+      <div class="container">
+        <h2>Stormwater Pollution Risk Calculator</h2>
+        <p class="section-intro">Choose where you made your observation and what debris you saw to get a risk level and a suggested fix.</p>
+
+        <div class="card calculator">
+          <label for="location">Campus location type</label>
+          <select id="location">
+            <option value="parking">Main Parking Lot</option>
+            <option value="canteen">Canteen Area</option>
+            <option value="courtyard">Academic Courtyard</option>
+            <option value="sports">Sports Ground</option>
+          </select>
+
+          <label for="debris">Primary observed surface debris</label>
+          <select id="debris">
+            <option value="plastic">Plastic packaging / wrappers</option>
+            <option value="tire">Microplastic tire dust / oil residue</option>
+            <option value="leaf">Leaf litter and organic waste</option>
+            <option value="litter">General campus litter</option>
+          </select>
+
+          <button class="btn" onclick="evaluateRisk()">Evaluate Runoff Risk</button>
+
+          <!-- Result box: hidden until evaluateRisk() runs -->
+          <div id="result-box" aria-live="polite">
+            <p id="risk-level"></p>
+            <p id="risk-detail"></p>
+            <p><strong>Recommended solution:</strong> <span id="risk-solution"></span></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         POLLUTION SOURCE CARDS (grid layout, 4 cards)
+         ======================================================== -->
+    <section id="sources">
+      <div class="container">
+        <h2>Campus Drainage &amp; Pollution Sources</h2>
+        <p class="section-intro">Four key ways rainwater picks up pollution as it moves across campus.</p>
+
+        <div class="grid">
+          <article class="card">
+            <div class="icon">🔬</div>
+            <h3>Surface Microplastics</h3>
+            <p>Tire wear, shredding synthetic turf, and degraded packaging break into tiny particles. Rain washes them into drains where they are very hard to remove.</p>
+          </article>
+
+          <article class="card">
+            <div class="icon">🍽️</div>
+            <h3>Canteen Wastewater &amp; Organic Runoff</h3>
+            <p>Food scraps, oils, and detergents rinsed outdoors enter drains and use up oxygen in water, harming aquatic life.</p>
+          </article>
+
+          <article class="card">
+            <div class="icon">🚗</div>
+            <h3>Parking Lot Hydrocarbons &amp; Heavy Metals</h3>
+            <p>Leaking oil, fuel, and brake dust leave residues on pavement. Stormwater carries them downstream as toxic pollutants.</p>
+          </article>
+
+          <article class="card">
+            <div class="icon">🌊</div>
+            <h3>Storm Drain Pathways &amp; Water Body Impact</h3>
+            <p>Most storm drains are untreated and lead straight to nearby ponds, canals, or rivers, so campus pollution becomes local water pollution.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         RECOMMENDATIONS FOR UNIVERSITY ADMINISTRATION
+         ======================================================== -->
+    <section id="recommendations" class="recommendations">
+      <div class="container">
+        <h2>Recommendations for University Administration</h2>
+        <p class="section-intro">Four practical steps to reduce stormwater pollution.</p>
+        <ul>
+          <li><strong>Build bio-retention swales</strong> and rain gardens to slow and filter runoff.</li>
+          <li><strong>Replace single-use plastics</strong> near outdoor seating with reusable or compostable options.</li>
+          <li><strong>Clean drains regularly</strong>, especially before monsoon season.</li>
+          <li><strong>Install fine-mesh drain filters</strong> to catch litter and larger microplastics.</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Campus Stormwater Runoff &amp; Microplastics Audit | Environmental Science Project</p>
+  </footer>
+
+  <!-- ==========================================================
+       LOGIN / SIGN UP POP-UP
+       One pop-up is reused for both. JavaScript changes the title,
+       shows or hides the Name field, and swaps the button text.
+       NOTE: this is front-end only (a demo). Real logins need a
+       server and a database.
+       ========================================================== -->
+  <div class="modal-overlay" id="auth-modal">
+    <div class="modal">
+      <button class="close-btn" onclick="closeModal()" aria-label="Close">&times;</button>
+      <h2 id="modal-title">Login</h2>
+
+      <form id="auth-form" onsubmit="handleAuth(event)">
+        <!-- Name field only appears for Sign Up -->
+        <div id="name-group" style="display:none;">
+          <label for="user-name">Full name</label>
+          <input type="text" id="user-name" placeholder="Your name">
+        </div>
+
+        <label for="user-email">Email</label>
+        <input type="email" id="user-email" placeholder="you@university.edu" required>
+
+        <label for="user-password">Password</label>
+        <input type="password" id="user-password" placeholder="Enter password" required minlength="6">
+
+        <button type="submit" class="btn" id="auth-submit" style="width:100%; margin-top:20px;">Login</button>
+      </form>
+
+      <p id="auth-message"></p>
+      <p class="switch-link" id="switch-link"></p>
+    </div>
+  </div>
+
+  <!-- ==========================================================
+       JAVASCRIPT: all the interactive logic lives here.
+       ========================================================== -->
+  <script>
+    /* ---------------------------------------------------------
+       PART A: RISK CALCULATOR
+       Idea: each location and each debris type gets a score.
+       We add the two scores together and convert the total to
+       Low / Moderate / High.
+       --------------------------------------------------------- */
+    function evaluateRisk() {
+
+      // Step 1: read what the user selected
+      var location = document.getElementById("location").value;
+      var debris = document.getElementById("debris").value;
+
+      // Step 2: give the location a score (higher = more runoff-prone)
+      var locationScore = 0;
+      switch (location) {
+        case "parking":   locationScore = 3; break; // lots of paved surface, fast runoff
+        case "canteen":   locationScore = 2; break; // food waste + packaging
+        case "sports":    locationScore = 2; break; // synthetic turf, open ground
+        case "courtyard": locationScore = 1; break; // more greenery, slower runoff
+      }
+
+      // Step 3: give the debris a score AND choose a solution
+      var debrisScore = 0;
+      var solution = "";
+      switch (debris) {
+        case "plastic":
+          debrisScore = 3;
+          solution = "Add a trash trap near drainage grates and place more bins around outdoor seating.";
+          break;
+        case "tire":
+          debrisScore = 4;
+          solution = "Install a rain garden / bioseed swale to filter oily runoff and trap fine particles.";
+          break;
+        case "leaf":
+          debrisScore = 1;
+          solution = "Implement organic waste composting and sweep leaves away from drains.";
+          break;
+        case "litter":
+          debrisScore = 2;
+          solution = "Run regular cleanups and install fine-mesh drain filters.";
+          break;
+      }
+
+      // Step 4: add the scores and decide the risk level with if / else
+      var total = locationScore + debrisScore;
+      var level = "";
+      var cssClass = "";
+      var detail = "";
+
+      if (total >= 6) {
+        level = "High Risk";
+        cssClass = "high";
+        detail = "Pollutants here are very likely to wash into storm drains during rain.";
+      } else if (total >= 4) {
+        level = "Moderate Risk";
+        cssClass = "moderate";
+        detail = "Some pollution may reach drains. Action is recommended before the next heavy rain.";
+      } else {
+        level = "Low Risk";
+        cssClass = "low";
+        detail = "Runoff risk is limited, but keep monitoring this area.";
+      }
+
+      // Step 5: show the result in the page
+      var box = document.getElementById("result-box");
+      box.className = cssClass;                 // sets the colour (low / moderate / high)
+      box.style.display = "block";              // un-hide the box
+      document.getElementById("risk-level").textContent = level + " (score " + total + " of 7)";
+      document.getElementById("risk-detail").textContent = detail;
+      document.getElementById("risk-solution").textContent = solution;
+    }
+
+    /* ---------------------------------------------------------
+       PART B: LOGIN / SIGN UP POP-UP
+       --------------------------------------------------------- */
+
+    // Open the pop-up in "login" or "signup" mode
+    function openModal(mode) {
+      document.getElementById("auth-modal").classList.add("open");  // show it
+      document.getElementById("auth-message").textContent = "";     // clear old message
+      setMode(mode);
+    }
+
+    // Hide the pop-up
+    function closeModal() {
+      document.getElementById("auth-modal").classList.remove("open");
+      document.getElementById("auth-form").reset();                 // empty the fields
+    }
+
+    // Change the wording and fields depending on the mode
+    function setMode(mode) {
+      var title = document.getElementById("modal-title");
+      var nameGroup = document.getElementById("name-group");
+      var submit = document.getElementById("auth-submit");
+      var switchLink = document.getElementById("switch-link");
+
+      if (mode === "signup") {
+        title.textContent = "Sign Up";
+        submit.textContent = "Create Account";
+        nameGroup.style.display = "block";
+        switchLink.innerHTML = 'Already have an account? <a onclick="setMode(\'login\')">Login</a>';
+      } else {
+        title.textContent = "Login";
+        submit.textContent = "Login";
+        nameGroup.style.display = "none";
+        switchLink.innerHTML = 'New here? <a onclick="setMode(\'signup\')">Sign Up</a>';
+      }
+    }
+
+    // Runs when the form is submitted (demo only, nothing is saved)
+    function handleAuth(event) {
+      event.preventDefault();   // stop the page from reloading
+      var isSignup = document.getElementById("modal-title").textContent === "Sign Up";
+      document.getElementById("auth-message").textContent = isSignup
+        ? "Account created! (demo only)"
+        : "Logged in successfully! (demo only)";
+    }
+
+    // Close the pop-up if the user clicks the dark area outside it
+    document.getElementById("auth-modal").addEventListener("click", function (e) {
+      if (e.target === this) { closeModal(); }
+    });
+  </script>
+</body>
+</html>
