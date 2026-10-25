@@ -1,158 +1,208 @@
-```html
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <base target="_top">
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title>UpLinkAI Feedback Form</title>
 
   <style>
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      margin: 0;
-      padding: 30px 15px;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #eef2ff, #f8faff);
-      color: #252642;
+      font-family: Arial, Helvetica, sans-serif;
+      background: linear-gradient(135deg, #eef2ff, #f8fafc);
+      color: #1e293b;
+      min-height: 100vh;
+      padding: 35px 15px;
     }
 
     .container {
-      max-width: 680px;
-      margin: auto;
-      background: #fff;
-      border-radius: 18px;
-      overflow: hidden;
-      box-shadow: 0 10px 35px rgba(40, 40, 90, 0.12);
+      max-width: 650px;
+      margin: 0 auto;
     }
 
     .header {
-      padding: 30px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .logo {
+      display: inline-block;
+      background: #4f46e5;
       color: white;
-      background: linear-gradient(135deg, #4338ca, #7866f5);
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 15px;
     }
 
     .header h1 {
-      margin: 0 0 12px;
-      font-size: 28px;
+      font-size: 30px;
+      margin-bottom: 10px;
+      color: #172554;
     }
 
     .header p {
-      margin: 0;
+      color: #64748b;
       line-height: 1.6;
     }
 
-    form {
-      padding: 28px;
+    .form-card {
+      background: white;
+      padding: 30px;
+      border-radius: 18px;
+      box-shadow: 0 12px 40px rgba(15, 23, 42, 0.09);
+      border: 1px solid #e2e8f0;
     }
 
     .form-group {
       margin-bottom: 20px;
     }
 
-    label {
+    label, legend {
       display: block;
-      margin-bottom: 8px;
-      font-weight: bold;
+      font-weight: 600;
+      margin-bottom: 9px;
       font-size: 14px;
+      color: #334155;
     }
 
     .required {
       color: #dc2626;
     }
 
-    input,
-    select,
-    textarea {
+    input, select, textarea {
       width: 100%;
-      padding: 13px;
-      border: 1px solid #d6d9e8;
+      padding: 13px 14px;
+      border: 1px solid #cbd5e1;
       border-radius: 9px;
-      background: white;
-      font-family: inherit;
-      font-size: 15px;
+      background: #fff;
+      color: #0f172a;
+      font: inherit;
+      font-size: 14px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
     }
 
-    input:focus,
-    select:focus,
-    textarea:focus {
-      outline: none;
-      border-color: #5141d8;
-      box-shadow: 0 0 0 3px rgba(81, 65, 216, 0.12);
+    input:focus, select:focus, textarea:focus {
+      border-color: #6366f1;
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, .13);
     }
 
     textarea {
-      min-height: 110px;
+      min-height: 120px;
       resize: vertical;
+      line-height: 1.5;
+    }
+
+    .rating-options {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .rating-option {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid #cbd5e1;
+      padding: 10px 12px;
+      border-radius: 9px;
+      cursor: pointer;
+      font-weight: normal;
+      margin: 0;
+    }
+
+    .rating-option input {
+      width: auto;
+      accent-color: #4f46e5;
+    }
+
+    .rating-option:has(input:checked) {
+      background: #eef2ff;
+      border-color: #6366f1;
     }
 
     .submit-btn {
       width: 100%;
       padding: 15px;
+      background: #4f46e5;
       border: none;
-      border-radius: 9px;
-      background: #5141d8;
+      border-radius: 10px;
       color: white;
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
+      transition: background .2s, transform .2s;
     }
 
     .submit-btn:hover {
-      background: #3f31b5;
+      background: #4338ca;
+      transform: translateY(-1px);
     }
 
     .submit-btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
+      opacity: .65;
+      cursor: wait;
+      transform: none;
     }
 
-    #status {
-      margin-top: 16px;
-      padding: 12px;
-      border-radius: 8px;
+    .message {
+      display: none;
+      margin-top: 18px;
+      padding: 13px;
+      border-radius: 9px;
       line-height: 1.5;
+      font-size: 14px;
       overflow-wrap: anywhere;
     }
 
-    #status:empty {
-      display: none;
-    }
-
-    #status.success {
+    .message.success {
+      display: block;
       background: #dcfce7;
       color: #166534;
     }
 
-    #status.error {
+    .message.error {
+      display: block;
       background: #fee2e2;
       color: #991b1b;
     }
 
     .footer {
-      padding: 0 28px 25px;
-      color: #71758a;
-      font-size: 12px;
-      line-height: 1.6;
+      text-align: center;
+      margin-top: 22px;
+      color: #64748b;
+      font-size: 13px;
     }
 
     @media (max-width: 480px) {
       body {
-        padding: 15px 10px;
+        padding: 22px 12px;
       }
 
-      .header {
-        padding: 24px 20px;
+      .form-card {
+        padding: 21px 17px;
       }
 
-      form {
-        padding: 22px 20px;
+      .header h1 {
+        font-size: 25px;
       }
 
-      .footer {
-        padding: 0 20px 22px;
+      .rating-options {
+        gap: 7px;
+      }
+
+      .rating-option {
+        padding: 9px;
       }
     }
   </style>
@@ -160,164 +210,187 @@
 
 <body>
   <main class="container">
-
     <header class="header">
-      <h1>UpLinkAI Feedback Form</h1>
+      <div class="logo">UpLinkAI</div>
+      <h1>Feedback Form</h1>
       <p>
-        Your feedback matters! Help us improve our website,
-        learning resources, and AI features.
+        Your feedback helps us improve our courses
+        and learning experience.
       </p>
     </header>
 
-    <form id="feedbackForm">
+    <section class="form-card">
+      <form id="feedbackForm">
+        <div class="form-group">
+          <label for="name">
+            Full Name <span class="required">*</span>
+          </label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Enter your full name"
+            maxlength="100"
+            autocomplete="name"
+            required
+          >
+        </div>
 
-      <div class="form-group">
-        <label for="name">Full Name <span class="required">*</span></label>
-        <input
-          type="text"
-          id="name"
-          name="name"
-          maxlength="100"
-          placeholder="Enter your full name"
-          autocomplete="name"
-          required
-        >
-      </div>
+        <div class="form-group">
+          <label for="email">
+            Email Address <span class="required">*</span>
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="you@example.com"
+            maxlength="150"
+            autocomplete="email"
+            required
+          >
+        </div>
 
-      <div class="form-group">
-        <label for="email">Email Address <span class="required">*</span></label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          maxlength="254"
-          placeholder="Enter your email"
-          autocomplete="email"
-          required
-        >
-      </div>
+        <div class="form-group">
+          <label for="course">
+            Select Course <span class="required">*</span>
+          </label>
+          <select id="course" name="course" required>
+            <option value="">Choose your course</option>
+            <option value="Artificial Intelligence">
+              Artificial Intelligence
+            </option>
+            <option value="Python Programming">
+              Python Programming
+            </option>
+            <option value="Web Development">
+              Web Development
+            </option>
+            <option value="Data Science">
+              Data Science
+            </option>
+            <option value="Google Skills">
+              Google Skills
+            </option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
 
-      <div class="form-group">
-        <label for="course">Course / Department <span class="required">*</span></label>
-        <input
-          type="text"
-          id="course"
-          name="course"
-          maxlength="150"
-          placeholder="e.g. B.Tech CSE, BCA"
-          required
-        >
-      </div>
+        <fieldset class="form-group" style="border:0">
+          <legend>
+            Overall Rating <span class="required">*</span>
+          </legend>
 
-      <div class="form-group">
-        <label for="rating">Overall Rating <span class="required">*</span></label>
-        <select id="rating" name="rating" required>
-          <option value="">Select your rating</option>
-          <option value="5">5 - Excellent</option>
-          <option value="4">4 - Very Good</option>
-          <option value="3">3 - Good</option>
-          <option value="2">2 - Fair</option>
-          <option value="1">1 - Needs Improvement</option>
-        </select>
-      </div>
+          <div class="rating-options">
+            <label class="rating-option">
+              <input type="radio" name="rating" value="1" required>
+              1 ★
+            </label>
+            <label class="rating-option">
+              <input type="radio" name="rating" value="2">
+              2 ★
+            </label>
+            <label class="rating-option">
+              <input type="radio" name="rating" value="3">
+              3 ★
+            </label>
+            <label class="rating-option">
+              <input type="radio" name="rating" value="4">
+              4 ★
+            </label>
+            <label class="rating-option">
+              <input type="radio" name="rating" value="5">
+              5 ★
+            </label>
+          </div>
+        </fieldset>
 
-      <div class="form-group">
-        <label for="category">Feedback Category <span class="required">*</span></label>
-        <select id="category" name="category" required>
-          <option value="">Select a category</option>
-          <option value="Website">Website</option>
-          <option value="Courses and Learning">Courses and Learning</option>
-          <option value="AI Features">AI Features</option>
-          <option value="User Experience">User Experience</option>
-          <option value="Technical Issue">Technical Issue</option>
-          <option value="Other">Other</option>
-        </select>
-      </div>
+        <div class="form-group">
+          <label for="feedback">
+            Your Feedback <span class="required">*</span>
+          </label>
+          <textarea
+            id="feedback"
+            name="feedback"
+            placeholder="Tell us about your learning experience..."
+            maxlength="3000"
+            required
+          ></textarea>
+        </div>
 
-      <div class="form-group">
-        <label for="feedback">Your Feedback <span class="required">*</span></label>
-        <textarea
-          id="feedback"
-          name="feedback"
-          maxlength="5000"
-          placeholder="Share your experience with UpLinkAI..."
-          required
-        ></textarea>
-      </div>
+        <div class="form-group">
+          <label for="suggestions">
+            Suggestions for Improvement
+          </label>
+          <textarea
+            id="suggestions"
+            name="suggestions"
+            placeholder="What can we improve? (Optional)"
+            maxlength="2000"
+          ></textarea>
+        </div>
 
-      <div class="form-group">
-        <label for="suggestions">Suggestions for Improvement</label>
-        <textarea
-          id="suggestions"
-          name="suggestions"
-          maxlength="5000"
-          placeholder="What would you like us to improve?"
-        ></textarea>
-      </div>
+        <button type="submit" class="submit-btn" id="submitBtn">
+          Submit Feedback
+        </button>
 
-      <button class="submit-btn" id="submitBtn" type="submit">
-        Submit Feedback
-      </button>
+        <div
+          id="message"
+          class="message"
+          role="status"
+          aria-live="polite"
+        ></div>
+      </form>
+    </section>
 
-      <div id="status" role="status" aria-live="polite"></div>
-    </form>
-
-    <div class="footer">
-      Fields marked with * are required. Submitted feedback will be
-      stored in the connected Google Sheet.
-    </div>
-
+    <footer class="footer">
+      © 2026 UpLinkAI · Thank you for sharing your feedback!
+    </footer>
   </main>
 
   <script>
- " https://script.google.com/macros/s/AKfycbxHB1gsISpUmatZ79l30HXHoLuD1uzJoKqWV4OcOcHyy4S_4tVq5q5Cz_MsXK8ZQqI27A/exec";
     const form = document.getElementById("feedbackForm");
     const submitBtn = document.getElementById("submitBtn");
-    const statusBox = document.getElementById("status");
+    const message = document.getElementById("message");
 
     form.addEventListener("submit", function(event) {
       event.preventDefault();
 
       if (!form.reportValidity()) return;
 
+      const formData = new FormData(form);
+
       const data = {
-        name: form.elements.namedItem("name").value.trim(),
-        email: form.elements.namedItem("email").value.trim(),
-        course: form.elements.namedItem("course").value.trim(),
-        rating: form.elements.namedItem("rating").value,
-        category: form.elements.namedItem("category").value,
-        feedback: form.elements.namedItem("feedback").value.trim(),
-        suggestions: form.elements.namedItem("suggestions").value.trim()
+        name: String(formData.get("name") || "").trim(),
+        email: String(formData.get("email") || "").trim(),
+        course: String(formData.get("course") || ""),
+        rating: String(formData.get("rating") || ""),
+        feedback: String(formData.get("feedback") || "").trim(),
+        suggestions: String(
+          formData.get("suggestions") || ""
+        ).trim()
       };
 
+      message.className = "message";
+      message.textContent = "";
       submitBtn.disabled = true;
       submitBtn.textContent = "Submitting...";
-      statusBox.className = "";
-      statusBox.textContent = "Saving your feedback...";
 
-      // This works when the HTML is served by Google Apps Script.
       google.script.run
         .withSuccessHandler(function(result) {
-          if (result && result.success) {
-            form.reset();
-            statusBox.textContent = result.message;
-            statusBox.className = "success";
-          } else {
-            statusBox.textContent =
-              "Submission could not be confirmed. Please try again.";
-            statusBox.className = "error";
-          }
-
+          message.textContent = result.message;
+          message.className = "message success";
+          form.reset();
           submitBtn.disabled = false;
           submitBtn.textContent = "Submit Feedback";
         })
         .withFailureHandler(function(error) {
-          statusBox.textContent =
+          message.textContent =
             error && error.message
               ? error.message
-              : "Something went wrong. Please try again.";
-          statusBox.className = "error";
+              : "Submission failed. Please try again.";
 
+          message.className = "message error";
           submitBtn.disabled = false;
           submitBtn.textContent = "Submit Feedback";
         })
@@ -326,4 +399,3 @@
   </script>
 </body>
 </html>
-```
