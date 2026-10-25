@@ -1,0 +1,239 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UpLinkAI Feedback Form</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 30px 15px;
+      font-family: Arial, sans-serif;
+      background: #eef2ff;
+      color: #1e293b;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      padding: 30px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .header h1 {
+      color: #4338ca;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      color: #64748b;
+      line-height: 1.5;
+    }
+
+    label {
+      display: block;
+      margin: 17px 0 7px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font: inherit;
+      background: #fff;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: 2px solid #a5b4fc;
+      border-color: #4338ca;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      margin-top: 24px;
+      border: none;
+      border-radius: 8px;
+      background: #4338ca;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #3730a3;
+    }
+
+    button:disabled {
+      opacity: 0.65;
+      cursor: wait;
+    }
+
+    #status {
+      margin-top: 18px;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .success {
+      color: #15803d;
+    }
+
+    .error {
+      color: #b91c1c;
+    }
+
+    .note {
+      color: #64748b;
+      font-size: 12px;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="container">
+    <div class="header">
+      <h1>UpLinkAI</h1>
+      <h2>Feedback Form</h2>
+      <p>
+        We value your feedback! Share your experience
+        and help us improve our courses.
+      </p>
+    </div>
+
+    <form id="feedbackForm">
+      <label for="name">Full Name *</label>
+      <input type="text" id="name" name="name"
+             maxlength="100" placeholder="Enter your name" required>
+
+      <label for="email">Email Address *</label>
+      <input type="email" id="email" name="email"
+             maxlength="254" placeholder="Enter your email" required>
+
+      <label for="course">Course Name *</label>
+      <select id="course" name="course" required>
+        <option value="">Select your course</option>
+        <option>Google Skills India</option>
+        <option>Artificial Intelligence</option>
+        <option>Python Programming</option>
+        <option>Web Development</option>
+        <option>Data Science</option>
+        <option>Other</option>
+      </select>
+
+      <label for="rating">Rate Your Experience *</label>
+      <select id="rating" name="rating" required>
+        <option value="">Select rating</option>
+        <option>5 - Excellent</option>
+        <option>4 - Very Good</option>
+        <option>3 - Good</option>
+        <option>2 - Fair</option>
+        <option>1 - Poor</option>
+      </select>
+
+      <label for="category">Feedback Category *</label>
+      <select id="category" name="category" required>
+        <option value="">Select category</option>
+        <option>Course Content</option>
+        <option>Teaching Quality</option>
+        <option>Website Experience</option>
+        <option>Technical Issues</option>
+        <option>Overall Experience</option>
+      </select>
+
+      <label for="feedback">Your Feedback *</label>
+      <textarea id="feedback" name="feedback"
+                maxlength="5000"
+                placeholder="Write your feedback here..."
+                required></textarea>
+
+      <label for="suggestions">Suggestions for Improvement</label>
+      <textarea id="suggestions" name="suggestions"
+                maxlength="3000"
+                placeholder="Your suggestions (optional)"></textarea>
+
+      <p class="note">* Required fields</p>
+
+      <button type="submit" id="submitBtn">
+        Submit Feedback
+      </button>
+
+      <p id="status" role="status" aria-live="polite"></p>
+    </form>
+  </main>
+
+  <script>
+  
+<script>
+  // Paste your deployed Google Apps Script URL here
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxaXUa5V_wFrFVlJdiEt58T8wnINzqO-FvEGB59CVWJqM50lyBzeELekNGn8IW1C4P_0A/exec""https://script.google.com/macros/s/AKfycbwAqs0KWvf7Q2KqzZfg_WiwU5D2DqB9BbV35mi2_9B0_Jq_F_Z1j7BOqRUXjpI8OA5TyQ/exec";
+
+  const form = document.getElementById("feedbackForm");
+  const statusBox = document.getElementById("status");
+  const button = document.getElementById("submitBtn");
+
+  
+    const form = document.getElementById("feedbackForm");
+    const statusBox = document.getElementById("status");
+    const button = document.getElementById("submitBtn");
+
+    form.addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      if (!form.reportValidity()) return;
+
+      const feedbackData = {
+        name: document.getElementById("name").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        course: document.getElementById("course").value,
+        rating: document.getElementById("rating").value,
+        category: document.getElementById("category").value,
+        feedback: document.getElementById("feedback").value.trim(),
+        suggestions: document.getElementById("suggestions").value.trim()
+      };
+
+      // Front-end demonstration only.
+      // No database connection is configured in this file.
+      button.disabled = true;
+      button.textContent = "Submitting...";
+
+      statusBox.textContent =
+        "Demo only: feedback has not been saved to Google Sheets.";
+      statusBox.className = "error";
+
+      console.log("Feedback entered:", feedbackData);
+
+      button.disabled = false;
+      button.textContent = "Submit Feedback";
+    });
+  </script>
+</body>
+</html>
