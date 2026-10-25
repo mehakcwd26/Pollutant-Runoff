@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,104 +15,144 @@
       margin: 0;
       padding: 30px 15px;
       font-family: Arial, sans-serif;
-      background: #eef2ff;
-      color: #1e293b;
+      background: linear-gradient(135deg, #eef2ff, #f8faff);
+      color: #252642;
     }
 
     .container {
-      max-width: 600px;
+      max-width: 680px;
       margin: auto;
-      padding: 30px;
-      background: white;
-      border-radius: 16px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      background: #fff;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 10px 35px rgba(40, 40, 90, 0.12);
     }
 
     .header {
-      text-align: center;
-      margin-bottom: 25px;
+      padding: 30px;
+      color: white;
+      background: linear-gradient(135deg, #4338ca, #7866f5);
     }
 
     .header h1 {
-      color: #4338ca;
-      margin-bottom: 8px;
+      margin: 0 0 12px;
+      font-size: 28px;
     }
 
     .header p {
-      color: #64748b;
-      line-height: 1.5;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    form {
+      padding: 28px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
     }
 
     label {
       display: block;
-      margin: 17px 0 7px;
+      margin-bottom: 8px;
       font-weight: bold;
       font-size: 14px;
     }
 
-    input, select, textarea {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      font: inherit;
-      background: #fff;
+    .required {
+      color: #dc2626;
     }
 
-    input:focus, select:focus, textarea:focus {
-      outline: 2px solid #a5b4fc;
-      border-color: #4338ca;
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #d6d9e8;
+      border-radius: 9px;
+      background: white;
+      font-family: inherit;
+      font-size: 15px;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #5141d8;
+      box-shadow: 0 0 0 3px rgba(81, 65, 216, 0.12);
     }
 
     textarea {
-      min-height: 100px;
+      min-height: 110px;
       resize: vertical;
     }
 
-    button {
+    .submit-btn {
       width: 100%;
-      padding: 14px;
-      margin-top: 24px;
+      padding: 15px;
       border: none;
-      border-radius: 8px;
-      background: #4338ca;
+      border-radius: 9px;
+      background: #5141d8;
       color: white;
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
     }
 
-    button:hover {
-      background: #3730a3;
+    .submit-btn:hover {
+      background: #3f31b5;
     }
 
-    button:disabled {
-      opacity: 0.65;
-      cursor: wait;
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
 
     #status {
-      margin-top: 18px;
-      text-align: center;
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 8px;
       line-height: 1.5;
+      overflow-wrap: anywhere;
     }
 
-    .success {
-      color: #15803d;
+    #status:empty {
+      display: none;
     }
 
-    .error {
-      color: #b91c1c;
+    #status.success {
+      background: #dcfce7;
+      color: #166534;
     }
 
-    .note {
-      color: #64748b;
+    #status.error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .footer {
+      padding: 0 28px 25px;
+      color: #71758a;
       font-size: 12px;
+      line-height: 1.6;
     }
 
     @media (max-width: 480px) {
-      .container {
-        padding: 20px;
+      body {
+        padding: 15px 10px;
+      }
+
+      .header {
+        padding: 24px 20px;
+      }
+
+      form {
+        padding: 22px 20px;
+      }
+
+      .footer {
+        padding: 0 20px 22px;
       }
     }
   </style>
@@ -120,120 +160,170 @@
 
 <body>
   <main class="container">
-    <div class="header">
-      <h1>UpLinkAI</h1>
-      <h2>Feedback Form</h2>
+
+    <header class="header">
+      <h1>UpLinkAI Feedback Form</h1>
       <p>
-        We value your feedback! Share your experience
-        and help us improve our courses.
+        Your feedback matters! Help us improve our website,
+        learning resources, and AI features.
       </p>
-    </div>
+    </header>
 
     <form id="feedbackForm">
-      <label for="name">Full Name *</label>
-      <input type="text" id="name" name="name"
-             maxlength="100" placeholder="Enter your name" required>
 
-      <label for="email">Email Address *</label>
-      <input type="email" id="email" name="email"
-             maxlength="254" placeholder="Enter your email" required>
+      <div class="form-group">
+        <label for="name">Full Name <span class="required">*</span></label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          maxlength="100"
+          placeholder="Enter your full name"
+          autocomplete="name"
+          required
+        >
+      </div>
 
-      <label for="course">Course Name *</label>
-      <select id="course" name="course" required>
-        <option value="">Select your course</option>
-        <option>Google Skills India</option>
-        <option>Artificial Intelligence</option>
-        <option>Python Programming</option>
-        <option>Web Development</option>
-        <option>Data Science</option>
-        <option>Other</option>
-      </select>
+      <div class="form-group">
+        <label for="email">Email Address <span class="required">*</span></label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          maxlength="254"
+          placeholder="Enter your email"
+          autocomplete="email"
+          required
+        >
+      </div>
 
-      <label for="rating">Rate Your Experience *</label>
-      <select id="rating" name="rating" required>
-        <option value="">Select rating</option>
-        <option>5 - Excellent</option>
-        <option>4 - Very Good</option>
-        <option>3 - Good</option>
-        <option>2 - Fair</option>
-        <option>1 - Poor</option>
-      </select>
+      <div class="form-group">
+        <label for="course">Course / Department <span class="required">*</span></label>
+        <input
+          type="text"
+          id="course"
+          name="course"
+          maxlength="150"
+          placeholder="e.g. B.Tech CSE, BCA"
+          required
+        >
+      </div>
 
-      <label for="category">Feedback Category *</label>
-      <select id="category" name="category" required>
-        <option value="">Select category</option>
-        <option>Course Content</option>
-        <option>Teaching Quality</option>
-        <option>Website Experience</option>
-        <option>Technical Issues</option>
-        <option>Overall Experience</option>
-      </select>
+      <div class="form-group">
+        <label for="rating">Overall Rating <span class="required">*</span></label>
+        <select id="rating" name="rating" required>
+          <option value="">Select your rating</option>
+          <option value="5">5 - Excellent</option>
+          <option value="4">4 - Very Good</option>
+          <option value="3">3 - Good</option>
+          <option value="2">2 - Fair</option>
+          <option value="1">1 - Needs Improvement</option>
+        </select>
+      </div>
 
-      <label for="feedback">Your Feedback *</label>
-      <textarea id="feedback" name="feedback"
-                maxlength="5000"
-                placeholder="Write your feedback here..."
-                required></textarea>
+      <div class="form-group">
+        <label for="category">Feedback Category <span class="required">*</span></label>
+        <select id="category" name="category" required>
+          <option value="">Select a category</option>
+          <option value="Website">Website</option>
+          <option value="Courses and Learning">Courses and Learning</option>
+          <option value="AI Features">AI Features</option>
+          <option value="User Experience">User Experience</option>
+          <option value="Technical Issue">Technical Issue</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
 
-      <label for="suggestions">Suggestions for Improvement</label>
-      <textarea id="suggestions" name="suggestions"
-                maxlength="3000"
-                placeholder="Your suggestions (optional)"></textarea>
+      <div class="form-group">
+        <label for="feedback">Your Feedback <span class="required">*</span></label>
+        <textarea
+          id="feedback"
+          name="feedback"
+          maxlength="5000"
+          placeholder="Share your experience with UpLinkAI..."
+          required
+        ></textarea>
+      </div>
 
-      <p class="note">* Required fields</p>
+      <div class="form-group">
+        <label for="suggestions">Suggestions for Improvement</label>
+        <textarea
+          id="suggestions"
+          name="suggestions"
+          maxlength="5000"
+          placeholder="What would you like us to improve?"
+        ></textarea>
+      </div>
 
-      <button type="submit" id="submitBtn">
+      <button class="submit-btn" id="submitBtn" type="submit">
         Submit Feedback
       </button>
 
-      <p id="status" role="status" aria-live="polite"></p>
+      <div id="status" role="status" aria-live="polite"></div>
     </form>
+
+    <div class="footer">
+      Fields marked with * are required. Submitted feedback will be
+      stored in the connected Google Sheet.
+    </div>
+
   </main>
 
   <script>
-  
-<script>
-  // Paste your deployed Google Apps Script URL here
-  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxaXUa5V_wFrFVlJdiEt58T8wnINzqO-FvEGB59CVWJqM50lyBzeELekNGn8IW1C4P_0A/exec""https://script.google.com/macros/s/AKfycbwAqs0KWvf7Q2KqzZfg_WiwU5D2DqB9BbV35mi2_9B0_Jq_F_Z1j7BOqRUXjpI8OA5TyQ/exec";
-
-  const form = document.getElementById("feedbackForm");
-  const statusBox = document.getElementById("status");
-  const button = document.getElementById("submitBtn");
-
-  
+ " https://script.google.com/macros/s/AKfycbxHB1gsISpUmatZ79l30HXHoLuD1uzJoKqWV4OcOcHyy4S_4tVq5q5Cz_MsXK8ZQqI27A/exec";
     const form = document.getElementById("feedbackForm");
+    const submitBtn = document.getElementById("submitBtn");
     const statusBox = document.getElementById("status");
-    const button = document.getElementById("submitBtn");
 
     form.addEventListener("submit", function(event) {
       event.preventDefault();
 
       if (!form.reportValidity()) return;
 
-      const feedbackData = {
-        name: document.getElementById("name").value.trim(),
-        email: document.getElementById("email").value.trim(),
-        course: document.getElementById("course").value,
-        rating: document.getElementById("rating").value,
-        category: document.getElementById("category").value,
-        feedback: document.getElementById("feedback").value.trim(),
-        suggestions: document.getElementById("suggestions").value.trim()
+      const data = {
+        name: form.elements.namedItem("name").value.trim(),
+        email: form.elements.namedItem("email").value.trim(),
+        course: form.elements.namedItem("course").value.trim(),
+        rating: form.elements.namedItem("rating").value,
+        category: form.elements.namedItem("category").value,
+        feedback: form.elements.namedItem("feedback").value.trim(),
+        suggestions: form.elements.namedItem("suggestions").value.trim()
       };
 
-      // Front-end demonstration only.
-      // No database connection is configured in this file.
-      button.disabled = true;
-      button.textContent = "Submitting...";
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Submitting...";
+      statusBox.className = "";
+      statusBox.textContent = "Saving your feedback...";
 
-      statusBox.textContent =
-        "Demo only: feedback has not been saved to Google Sheets.";
-      statusBox.className = "error";
+      // This works when the HTML is served by Google Apps Script.
+      google.script.run
+        .withSuccessHandler(function(result) {
+          if (result && result.success) {
+            form.reset();
+            statusBox.textContent = result.message;
+            statusBox.className = "success";
+          } else {
+            statusBox.textContent =
+              "Submission could not be confirmed. Please try again.";
+            statusBox.className = "error";
+          }
 
-      console.log("Feedback entered:", feedbackData);
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Submit Feedback";
+        })
+        .withFailureHandler(function(error) {
+          statusBox.textContent =
+            error && error.message
+              ? error.message
+              : "Something went wrong. Please try again.";
+          statusBox.className = "error";
 
-      button.disabled = false;
-      button.textContent = "Submit Feedback";
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Submit Feedback";
+        })
+        .submitFeedback(data);
     });
   </script>
 </body>
 </html>
+```
