@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <!-- Campus Stormwater Runoff & Microplastics Audit -->
 <html lang="en">
@@ -240,6 +239,11 @@
       margin-bottom: 12px;
     }
 
+    /* Feedback section (new): centres the button */
+    .feedback-section {
+      text-align: center;
+    }
+
     /* Footer */
     footer {
       background: var(--deep-blue);
@@ -425,6 +429,20 @@
       </div>
     </section>
 
+    <!-- NEW: Feedback section with a button that opens feedback.html -->
+    <section id="feedback" class="feedback-section">
+      <div class="container">
+        <h2>Share Your Feedback</h2>
+
+        <p class="section-intro">
+          Have a question or suggestion about this audit? Let us know.
+        </p>
+
+        <!-- A normal link styled as a button. href points to the feedback page. -->
+        <a class="btn" href="feedback.html">Open Feedback Page</a>
+      </div>
+    </section>
+
   </main>
 
   <!-- Footer -->
@@ -437,17 +455,6 @@
 
   <!-- JavaScript: pollution risk calculator -->
   <script>
-    
-<button type="button" onclick="openFeedbackPage()">
-  Open Feedback Page
-</button>
-
-<script>
-  function openFeedbackPage() {
-    window.location.href = "?page=feedback";
-  }
-</script>
-
     function evaluateRisk() {
 
       // Read the selected campus location and debris type
