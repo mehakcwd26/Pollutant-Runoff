@@ -1,400 +1,411 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <base target="_top">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <title>UpLinkAI Feedback Form</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Course Feedback Form</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    /* ==========================================================
+       1. DESIGN TOKENS
+       CSS variables keep colours in one place. Change a value
+       here and it updates everywhere on the page.
+       ========================================================== */
+    :root {
+      --bg: #eef3f5;          /* page background */
+      --card: #ffffff;        /* form card */
+      --ink: #14212b;         /* main text */
+      --muted: #5b6b77;       /* helper text */
+      --line: #cfdae1;        /* borders */
+      --accent: #0b6e7f;      /* buttons, focus, selected rating */
+      --accent-dark: #084f5c; /* button hover */
+      --error: #b3261e;       /* validation errors */
+      --ok: #1d7a46;         /* success message */
+      --radius: 10px;
     }
+
+    /* ==========================================================
+       2. BASE / LAYOUT
+       ========================================================== */
+    * { box-sizing: border-box; }   /* padding doesn't add to width */
 
     body {
-      font-family: Arial, Helvetica, sans-serif;
-      background: linear-gradient(135deg, #eef2ff, #f8fafc);
-      color: #1e293b;
+      margin: 0;
       min-height: 100vh;
-      padding: 35px 15px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 32px 16px;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      line-height: 1.5;
     }
 
-    .container {
-      max-width: 650px;
-      margin: 0 auto;
+    .card {
+      width: 100%;
+      max-width: 560px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 32px 28px;
     }
 
-    .header {
-      text-align: center;
-      margin-bottom: 24px;
-    }
+    h1 { margin: 0 0 4px; font-size: 1.6rem; }
+    .intro { margin: 0 0 24px; color: var(--muted); }
 
-    .logo {
-      display: inline-block;
-      background: #4f46e5;
-      color: white;
-      padding: 10px 18px;
-      border-radius: 12px;
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: 15px;
-    }
-
-    .header h1 {
-      font-size: 30px;
-      margin-bottom: 10px;
-      color: #172554;
-    }
-
-    .header p {
-      color: #64748b;
-      line-height: 1.6;
-    }
-
-    .form-card {
-      background: white;
-      padding: 30px;
-      border-radius: 18px;
-      box-shadow: 0 12px 40px rgba(15, 23, 42, 0.09);
-      border: 1px solid #e2e8f0;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
+    /* ==========================================================
+       3. FORM FIELDS
+       ========================================================== */
+    .field { margin-bottom: 18px; }
 
     label, legend {
       display: block;
+      margin-bottom: 6px;
       font-weight: 600;
-      margin-bottom: 9px;
-      font-size: 14px;
-      color: #334155;
+      font-size: 0.95rem;
     }
 
-    .required {
-      color: #dc2626;
-    }
+    .optional { font-weight: 400; color: var(--muted); }
 
-    input, select, textarea {
-      width: 100%;
-      padding: 13px 14px;
-      border: 1px solid #cbd5e1;
-      border-radius: 9px;
-      background: #fff;
-      color: #0f172a;
-      font: inherit;
-      font-size: 14px;
-      outline: none;
-      transition: border-color .2s, box-shadow .2s;
-    }
-
-    input:focus, select:focus, textarea:focus {
-      border-color: #6366f1;
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, .13);
-    }
-
+    input[type="text"],
+    input[type="email"],
+    select,
     textarea {
-      min-height: 120px;
-      resize: vertical;
-      line-height: 1.5;
-    }
-
-    .rating-options {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .rating-option {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      border: 1px solid #cbd5e1;
-      padding: 10px 12px;
-      border-radius: 9px;
-      cursor: pointer;
-      font-weight: normal;
-      margin: 0;
-    }
-
-    .rating-option input {
-      width: auto;
-      accent-color: #4f46e5;
-    }
-
-    .rating-option:has(input:checked) {
-      background: #eef2ff;
-      border-color: #6366f1;
-    }
-
-    .submit-btn {
       width: 100%;
-      padding: 15px;
-      background: #4f46e5;
-      border: none;
-      border-radius: 10px;
-      color: white;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background .2s, transform .2s;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font: inherit;           /* use the same font as the page */
+      color: var(--ink);
+      background: #fff;
     }
 
-    .submit-btn:hover {
-      background: #4338ca;
-      transform: translateY(-1px);
+    textarea { min-height: 130px; resize: vertical; }
+
+    /* Visible focus ring for keyboard users */
+    input:focus, select:focus, textarea:focus,
+    .rating input:focus-visible + label {
+      outline: 3px solid rgba(11, 110, 127, 0.35);
+      border-color: var(--accent);
     }
 
-    .submit-btn:disabled {
-      opacity: .65;
-      cursor: wait;
-      transform: none;
-    }
+    /* Red border + message when a field is invalid */
+    .field.invalid input,
+    .field.invalid select,
+    .field.invalid textarea { border-color: var(--error); }
 
-    .message {
-      display: none;
-      margin-top: 18px;
-      padding: 13px;
-      border-radius: 9px;
-      line-height: 1.5;
-      font-size: 14px;
-      overflow-wrap: anywhere;
+    .error-msg {
+      display: none;           /* hidden until the field is invalid */
+      margin-top: 4px;
+      color: var(--error);
+      font-size: 0.85rem;
     }
+    .field.invalid .error-msg { display: block; }
 
-    .message.success {
-      display: block;
-      background: #dcfce7;
-      color: #166534;
-    }
+    .counter { text-align: right; color: var(--muted); font-size: 0.8rem; }
 
-    .message.error {
-      display: block;
-      background: #fee2e2;
-      color: #991b1b;
-    }
+    /* ==========================================================
+       4. RATING (radio buttons styled as numbered pills)
+       The real <input type="radio"> is hidden; the <label>
+       next to it is what the user sees and clicks.
+       ========================================================== */
+    fieldset { border: 0; margin: 0 0 18px; padding: 0; }
 
-    .footer {
+    .rating { display: flex; gap: 8px; }
+    .rating input { position: absolute; opacity: 0; }  /* hide, keep accessible */
+
+    .rating label {
+      flex: 1;
+      margin: 0;
+      padding: 10px 0;
       text-align: center;
-      margin-top: 22px;
-      color: #64748b;
-      font-size: 13px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
     }
 
-    @media (max-width: 480px) {
-      body {
-        padding: 22px 12px;
-      }
-
-      .form-card {
-        padding: 21px 17px;
-      }
-
-      .header h1 {
-        font-size: 25px;
-      }
-
-      .rating-options {
-        gap: 7px;
-      }
-
-      .rating-option {
-        padding: 9px;
-      }
+    /* When the hidden radio is checked, colour its label */
+    .rating input:checked + label {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
     }
+
+    .rating-scale {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.8rem;
+    }
+
+    /* Honeypot field: hidden from humans, bots tend to fill it in */
+    .hp { position: absolute; left: -9999px; }
+
+    /* ==========================================================
+       5. BUTTON + STATUS MESSAGE
+       ========================================================== */
+    button {
+      width: 100%;
+      padding: 12px;
+      border: 0;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #fff;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:hover:not(:disabled) { background: var(--accent-dark); }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    #status {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 8px;
+      display: none;
+      font-size: 0.95rem;
+    }
+    #status.success { display: block; background: #e5f4ec; color: var(--ok); }
+    #status.fail    { display: block; background: #fbe9e7; color: var(--error); }
   </style>
 </head>
 
 <body>
-  <main class="container">
-    <header class="header">
-      <div class="logo">UpLinkAI</div>
-      <h1>Feedback Form</h1>
-      <p>
-        Your feedback helps us improve our courses
-        and learning experience.
-      </p>
-    </header>
+  <main class="card">
+    <h1>Course feedback</h1>
+    <p class="intro">Tell us how the course is going. It takes about two minutes.</p>
 
-    <section class="form-card">
-      <form id="feedbackForm">
-        <div class="form-group">
-          <label for="name">
-            Full Name <span class="required">*</span>
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            placeholder="Enter your full name"
-            maxlength="100"
-            autocomplete="name"
-            required
-          >
+    <!-- novalidate = we run our own validation in JavaScript below -->
+    <form id="feedbackForm" novalidate>
+
+      <!-- Full name -->
+      <div class="field">
+        <label for="name">Full name</label>
+        <input type="text" id="name" name="name" autocomplete="name" required />
+        <div class="error-msg">Please enter your name.</div>
+      </div>
+
+      <!-- Email -->
+      <div class="field">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" autocomplete="email" required />
+        <div class="error-msg">Please enter a valid email address.</div>
+      </div>
+
+      <!-- Course -->
+      <div class="field">
+        <label for="course">Course</label>
+        <select id="course" name="course" required>
+          <option value="">Select your course</option>
+          <!-- Edit these options to match your own courses -->
+          <option>Environmental Science</option>
+          <option>Computer Science</option>
+          <option>Business Administration</option>
+          <option>Engineering</option>
+          <option>Other</option>
+        </select>
+        <div class="error-msg">Please choose a course.</div>
+      </div>
+
+      <!-- Year / semester -->
+      <div class="field">
+        <label for="year">Year of study</label>
+        <select id="year" name="year" required>
+          <option value="">Select your year</option>
+          <option>1st year</option>
+          <option>2nd year</option>
+          <option>3rd year</option>
+          <option>4th year</option>
+          <option>Postgraduate</option>
+        </select>
+        <div class="error-msg">Please choose your year.</div>
+      </div>
+
+      <!-- Feedback type -->
+      <div class="field">
+        <label for="category">Feedback type</label>
+        <select id="category" name="category" required>
+          <option value="">Select a type</option>
+          <option>Teaching</option>
+          <option>Course content</option>
+          <option>Assignments and exams</option>
+          <option>Facilities</option>
+          <option>Other</option>
+        </select>
+        <div class="error-msg">Please choose a feedback type.</div>
+      </div>
+
+      <!-- Rating 1 to 5 -->
+      <fieldset class="field" id="ratingField">
+        <legend>Overall rating</legend>
+        <div class="rating">
+          <input type="radio" id="r1" name="rating" value="1" /><label for="r1">1</label>
+          <input type="radio" id="r2" name="rating" value="2" /><label for="r2">2</label>
+          <input type="radio" id="r3" name="rating" value="3" /><label for="r3">3</label>
+          <input type="radio" id="r4" name="rating" value="4" /><label for="r4">4</label>
+          <input type="radio" id="r5" name="rating" value="5" /><label for="r5">5</label>
         </div>
+        <div class="rating-scale"><span>Poor</span><span>Excellent</span></div>
+        <div class="error-msg">Please pick a rating.</div>
+      </fieldset>
 
-        <div class="form-group">
-          <label for="email">
-            Email Address <span class="required">*</span>
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="you@example.com"
-            maxlength="150"
-            autocomplete="email"
-            required
-          >
-        </div>
+      <!-- Feedback text -->
+      <div class="field">
+        <label for="feedback">Your feedback</label>
+        <textarea id="feedback" name="feedback" maxlength="1000" required></textarea>
+        <div class="counter"><span id="count">0</span> / 1000</div>
+        <div class="error-msg">Please write at least 10 characters.</div>
+      </div>
 
-        <div class="form-group">
-          <label for="course">
-            Select Course <span class="required">*</span>
-          </label>
-          <select id="course" name="course" required>
-            <option value="">Choose your course</option>
-            <option value="Artificial Intelligence">
-              Artificial Intelligence
-            </option>
-            <option value="Python Programming">
-              Python Programming
-            </option>
-            <option value="Web Development">
-              Web Development
-            </option>
-            <option value="Data Science">
-              Data Science
-            </option>
-            <option value="Google Skills">
-              Google Skills
-            </option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
+      <!-- Optional suggestions -->
+      <div class="field">
+        <label for="suggestions">Suggestions <span class="optional">(optional)</span></label>
+        <textarea id="suggestions" name="suggestions" maxlength="500" style="min-height:80px"></textarea>
+      </div>
 
-        <fieldset class="form-group" style="border:0">
-          <legend>
-            Overall Rating <span class="required">*</span>
-          </legend>
+      <!-- Honeypot: real users never see or fill this -->
+      <div class="hp" aria-hidden="true">
+        <label for="website">Leave this field empty</label>
+        <input type="text" id="website" name="website" tabindex="-1" autocomplete="off" />
+      </div>
 
-          <div class="rating-options">
-            <label class="rating-option">
-              <input type="radio" name="rating" value="1" required>
-              1 ★
-            </label>
-            <label class="rating-option">
-              <input type="radio" name="rating" value="2">
-              2 ★
-            </label>
-            <label class="rating-option">
-              <input type="radio" name="rating" value="3">
-              3 ★
-            </label>
-            <label class="rating-option">
-              <input type="radio" name="rating" value="4">
-              4 ★
-            </label>
-            <label class="rating-option">
-              <input type="radio" name="rating" value="5">
-              5 ★
-            </label>
-          </div>
-        </fieldset>
-
-        <div class="form-group">
-          <label for="feedback">
-            Your Feedback <span class="required">*</span>
-          </label>
-          <textarea
-            id="feedback"
-            name="feedback"
-            placeholder="Tell us about your learning experience..."
-            maxlength="3000"
-            required
-          ></textarea>
-        </div>
-
-        <div class="form-group">
-          <label for="suggestions">
-            Suggestions for Improvement
-          </label>
-          <textarea
-            id="suggestions"
-            name="suggestions"
-            placeholder="What can we improve? (Optional)"
-            maxlength="2000"
-          ></textarea>
-        </div>
-
-        <button type="submit" class="submit-btn" id="submitBtn">
-          Submit Feedback
-        </button>
-
-        <div
-          id="message"
-          class="message"
-          role="status"
-          aria-live="polite"
-        ></div>
-      </form>
-    </section>
-
-    <footer class="footer">
-      © 2026 UpLinkAI · Thank you for sharing your feedback!
-    </footer>
+      <button type="submit" id="submitBtn">Send feedback</button>
+      <div id="status" role="status" aria-live="polite"></div>
+    </form>
   </main>
 
   <script>
-    const form = document.getElementById("feedbackForm");
+    /* ==========================================================
+       STEP 1: PASTE YOUR WEB APP URL HERE
+       After deploying the Apps Script (see setup guide), Google
+       gives you a URL ending in /exec. Replace the text below.
+       ========================================================== */
+    const SCRIPT_URL = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
+
+    /* ----------------------------------------------------------
+       Grab the elements we need from the page
+       ---------------------------------------------------------- */
+    const form      = document.getElementById("feedbackForm");
     const submitBtn = document.getElementById("submitBtn");
-    const message = document.getElementById("message");
+    const statusBox = document.getElementById("status");
+    const feedbackEl = document.getElementById("feedback");
+    const countEl   = document.getElementById("count");
 
-    form.addEventListener("submit", function(event) {
-      event.preventDefault();
+    /* ----------------------------------------------------------
+       Live character counter for the feedback box
+       ---------------------------------------------------------- */
+    feedbackEl.addEventListener("input", () => {
+      countEl.textContent = feedbackEl.value.length;
+    });
 
-      if (!form.reportValidity()) return;
+    /* ----------------------------------------------------------
+       Helper: mark a field as valid or invalid.
+       The CSS shows/hides the red error text using the
+       "invalid" class on the wrapper.
+       ---------------------------------------------------------- */
+    function setInvalid(wrapper, isInvalid) {
+      wrapper.classList.toggle("invalid", isInvalid);
+    }
 
-      const formData = new FormData(form);
+    /* ----------------------------------------------------------
+       Validate the whole form. Returns true if everything is OK.
+       ---------------------------------------------------------- */
+    function validateForm() {
+      let ok = true;
 
-      const data = {
-        name: String(formData.get("name") || "").trim(),
-        email: String(formData.get("email") || "").trim(),
-        course: String(formData.get("course") || ""),
-        rating: String(formData.get("rating") || ""),
-        feedback: String(formData.get("feedback") || "").trim(),
-        suggestions: String(
-          formData.get("suggestions") || ""
-        ).trim()
-      };
+      // Simple regex to check email shape: something@something.something
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-      message.className = "message";
-      message.textContent = "";
+      // Text-like fields: name, email, course, year, category
+      const checks = [
+        { id: "name",     valid: form.name.value.trim().length >= 2 },
+        { id: "email",    valid: emailPattern.test(form.email.value.trim()) },
+        { id: "course",   valid: form.course.value !== "" },
+        { id: "year",     valid: form.year.value !== "" },
+        { id: "category", valid: form.category.value !== "" },
+        { id: "feedback", valid: form.feedback.value.trim().length >= 10 }
+      ];
+
+      checks.forEach(check => {
+        const wrapper = document.getElementById(check.id).closest(".field");
+        setInvalid(wrapper, !check.valid);
+        if (!check.valid) ok = false;
+      });
+
+      // Rating: at least one radio button must be selected
+      const ratingChosen = form.querySelector('input[name="rating"]:checked');
+      setInvalid(document.getElementById("ratingField"), !ratingChosen);
+      if (!ratingChosen) ok = false;
+
+      return ok;
+    }
+
+    /* ----------------------------------------------------------
+       Show a message under the button
+       type = "success" or "fail"
+       ---------------------------------------------------------- */
+    function showStatus(message, type) {
+      statusBox.textContent = message;
+      statusBox.className = type;   // applies the .success or .fail style
+    }
+
+    /* ----------------------------------------------------------
+       Handle form submission
+       ---------------------------------------------------------- */
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();       // stop the browser's default page reload
+      statusBox.className = "";     // hide any old message
+
+      // Stop here if any field is invalid
+      if (!validateForm()) {
+        showStatus("Please fix the highlighted fields and try again.", "fail");
+        return;
+      }
+
+      // Bots fill the hidden honeypot. Pretend success and do nothing.
+      if (form.website.value !== "") {
+        showStatus("Thank you! Your feedback was sent.", "success");
+        return;
+      }
+
+      // Make sure the URL was replaced
+      if (SCRIPT_URL.includes("PASTE_YOUR")) {
+        showStatus("Setup needed: add your Apps Script URL in the code.", "fail");
+        return;
+      }
+
+      // Disable the button so the user can't double-submit
       submitBtn.disabled = true;
-      submitBtn.textContent = "Submitting...";
+      submitBtn.textContent = "Sending...";
 
-      google.script.run
-        .withSuccessHandler(function(result) {
-          message.textContent = result.message;
-          message.className = "message success";
-          form.reset();
-          submitBtn.disabled = false;
-          submitBtn.textContent = "Submit Feedback";
-        })
-        .withFailureHandler(function(error) {
-          message.textContent =
-            error && error.message
-              ? error.message
-              : "Submission failed. Please try again.";
+      // Collect all form values into a URL-encoded body
+      const data = new URLSearchParams(new FormData(form));
 
-          message.className = "message error";
-          submitBtn.disabled = false;
-          submitBtn.textContent = "Submit Feedback";
-        })
-        .submitFeedback(data);
+      try {
+        /* "no-cors" lets the browser send data to Google's server
+           without a cross-origin error. The trade-off: we cannot
+           read the reply, so no error means the request was sent. */
+        await fetch(SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors",
+          body: data
+        });
+
+        showStatus("Thank you! Your feedback was sent.", "success");
+        form.reset();               // clear the form
+        countEl.textContent = "0";  // reset the counter
+      } catch (error) {
+        // This runs on network problems (offline, blocked, etc.)
+        console.error(error);
+        showStatus("Could not send. Check your connection and try again.", "fail");
+      } finally {
+        // Always re-enable the button, whether it worked or not
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Send feedback";
+      }
     });
   </script>
 </body>
