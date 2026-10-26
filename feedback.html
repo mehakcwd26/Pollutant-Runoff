@@ -283,7 +283,7 @@
        After deploying the Apps Script (see setup guide), Google
        gives you a URL ending in /exec. Replace the text below.
        ========================================================== */
-    const SCRIPT_URL = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
+    const SCRIPT_URL = "https://script.googleusercontent.com/macros/echo?user_content_key=AUkAhnTiBxdOYwh8kzHCRydvT4Y7mlqAzIjKETjoQzTEUQOjqxqQuoHfcEkoet-4IxlO1b2okCyrHNntInnBo31YyEzh7jIlPDof1oK5bjbd-RikjVO21spYX4nE09AAnFwTTop8Bd0F82n4shNPBuwGb8Iv8Z4hU_xOlBRzON9kWWu5l9SwTsJejm_3jVr-RjkispcO7QohOiH0EXydmOrxXufzDJBCzksB000YV02J6ftn8-hMgU_wOkQCvRo4SUObqYxuv_s3VzPTen6llBqvLo8ELWOmIQ&lib=MZeWhSXvi5sN1Cjrcs0GbMmBgRsIuqAJL";
 
     /* ----------------------------------------------------------
        Grab the elements we need from the page
@@ -372,7 +372,7 @@
       }
 
       // Make sure the URL was replaced
-      if (SCRIPT_URL.includes("https://script.googleusercontent.com/macros/echo?user_content_key=AUkAhnQOgYwVcX4A5LNB647f_yF7Uo8ckQMvi-8v5BIhdFHiccbWeA8ili5vhVoKN5roSXRLfC3_4HHFQgSQ1cJkEHEGIELBPWRUVTJjfN1pQ2apsaKiE9kHbkmVtof2sZ0w3SxNozgeykyJ6JvRxgNM1F21SB0AAbmlLT3-97j0R9k6S73xMpfR6XzjIb_9mHvZwghlHJFmUjc3n6tCVzjcCG2Oh6cgJmGU6mnuMLGKhHh4pQgIhaeD-hCq3vN8o9k46nvRxGHVSMYcUErtSceOz_2f5HewPw&lib=MdQ6UsNJFJoHpibBeymmk0mBgRsIuqAJL")) {
+      if (SCRIPT_URL.includes("PASTE_YOUR")) {
         showStatus("Setup needed: add your Apps Script URL in the code.", "fail");
         return;
       }
